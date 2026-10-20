@@ -1,0 +1,36 @@
+examples/clean-update-set.xml  (update set: DEMO-1043 Incident enhancements - refactored (synthetic))
+  no problems in 4 record(s)
+
+examples/sample-update-set.xml  (update set: DEMO-1042 Incident enhancements (synthetic))
+  LINE   SEVERITY RULE   RECORD                                      MESSAGE
+  18:5   note     SN006  Business Rule: Sync child tasks on update   gs.log() writes unconditionally to the system log. Prefer gs.debug()/gs.info() gated by a property, and remove temporary debug output.
+  23:19  warning  SN007  Business Rule: Sync child tasks on update   new GlideRecord() inside a loop issues one query per iteration (N+1). Query once with addQuery(field, 'IN', ids) or use GlideAggregate.
+  29:5   error    SN001  Business Rule: Sync child tasks on update   current.update() in an after Business Rule re-runs before/after rules on the same record (recursion risk). Move the logic to a before rule.
+  48:40  warning  SN004  Business Rule: Default VIP assignment g...  Hard-coded sys_id 'c0ffee000000000000000000000000aa'. Store it in a system property or look the record up by a stable key so the code survives clones and environment differences.
+  49:13  error    SN001  Business Rule: Default VIP assignment g...  current.update() in a before Business Rule is redundant (changes to current are saved automatically) and triggers a second database update.
+  51:7   warning  SN013  Business Rule: Default VIP assignment g...  Empty catch block hides failures. Log the error (gs.error / console.error) or rethrow it.
+  69:1   warning  SN012  Business Rule: Global utility functions     Global Business Rule: its script is loaded for every table and transaction. Move reusable functions into a Script Include and attach rules to specific tables.
+  71:5   warning  SN009  Business Rule: Global utility functions     t.query() on 'task' has no addQuery()/addEncodedQuery() filter (full table scan).
+  72:13  note     SN014  Business Rule: Global utility functions     getRowCount() retrieves the result set to count it. Use GlideAggregate with addAggregate('COUNT') instead.
+  92:18  error    SN003  Client Script: Validate caller location     g_form.getReference() without a callback is synchronous. Pass a callback function as the second argument.
+  93:15  error    SN002  Client Script: Validate caller location     Client-side GlideRecord performs a synchronous server call and exposes full records to the browser. Use GlideAjax with a client-callable Script Include.
+  98:7   error    SN003  Client Script: Validate caller location     getXMLWait() blocks the browser until the server responds and is not supported in Service Portal. Use getXMLAnswer()/getXML() with a callback.
+  100:9  note     SN006  Client Script: Validate caller location     alert() blocks the UI. Use g_form.addInfoMessage()/showFieldMsg() instead.
+  101:9  warning  SN011  Client Script: Validate caller location     Direct DOM manipulation depends on undocumented form markup that changes between releases and does not work in Service Portal / Next Experience. Use g_form APIs.
+  119:5  note     SN006  Client Script: Highlight high priority      console.log() looks like leftover debug output. Remove it before promoting the update set.
+  121:9  warning  SN011  Client Script: Highlight high priority      Direct DOM manipulation depends on undocumented form markup that changes between releases and does not work in Service Portal / Next Experience. Use g_form APIs.
+  122:9  warning  SN011  Client Script: Highlight high priority      Direct DOM manipulation depends on undocumented form markup that changes between releases and does not work in Service Portal / Next Experience. Use g_form APIs.
+  145:9  warning  SN008  Script Include: LegacyRoutingUtils          'rule' is used for a single-row lookup but has no setLimit(1); the database may still read every matching row.
+  149:20 error    SN010  Script Include: LegacyRoutingUtils          eval() executes arbitrary code. Replace with explicit logic or a lookup table.
+  157:21 warning  SN007  Script Include: LegacyRoutingUtils          new GlideRecord() inside a loop issues one query per iteration (N+1). Query once with addQuery(field, 'IN', ids) or use GlideAggregate.
+  188:9  error    SN005  Script Include: WorkOrderHelper             gs.log() is not available in scoped application 'x_demo_fieldsvc'. Use gs.info(), gs.warn(), gs.error() or gs.debug().
+  198:11 warning  SN013  Script Include: WorkOrderHelper             Empty catch block hides failures. Log the error (gs.error / console.error) or rethrow it.
+  256:1  warning  SN009  UI Action: Close stale tasks                stale.updateMultiple() on 'task' has no filter and will affect every row in the table.
+
+examples/single-record-unload.xml
+  LINE   SEVERITY RULE   RECORD                                      MESSAGE
+  16:9   warning  SN009  Script Include: InventorySync               parts.query() on 'x_demo_fieldsvc_part' has no addQuery()/addEncodedQuery() filter (full table scan).
+  17:9   error    SN005  Script Include: InventorySync               gs.print() is not available in scoped application 'x_demo_fieldsvc'. Use gs.info(), gs.warn(), gs.error() or gs.debug().
+  17:43  note     SN014  Script Include: InventorySync               getRowCount() retrieves the result set to count it. Use GlideAggregate with addAggregate('COUNT') instead.
+
+26 problem(s) (8 error(s), 13 warning(s), 5 note(s)) in 14 record(s) across 3 file(s)
