@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # No runtime or dev dependencies: tests use the built-in node:test runner.
+      - name: Run unit tests
+        run: npm test
+
+      - name: Verify committed examples are up to date
+        run: |
+          node scripts/generate-examples.js
+          git diff --exit-code examples/
+
+  lint-examples:
+    name: Lint example update sets
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Table report
+        run: node bin/sn-lint.js examples/ --no-color --fail-on none
+
+      - name: The clean example must have zero findings
+        run: node bin/sn-lint.js examples/clean-update-set.xml --fail-on note
+
+      - name: SARIF report
+        run: node bin/sn-lint.js examples/ --format sarif --output reports/sn-lint.sarif --fail-on none
+
+      - name: Upload SARIF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sn-lint-sarif
+          path: reports/sn-lint.sarif
+          retention-days: 14
+
+  # Optional: publish results to the Security > Code scanning tab.
+  # Requires GitHub Advanced Security on private repositories (free on public ones).
+  # code-scanning:
+  #   runs-on: ubuntu-latest
+  #   needs: lint-examples
+  #   permissions:
+  #     contents: read
+  #     security-events: write
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/download-artifact@v4
+  #       with:
+  #         name: sn-lint-sarif
+  #     - uses: github/codeql-action/upload-sarif@v3
+  #       with:
+  #         sarif_file: sn-lint.sarif
+  #         category: sn-update-set-lint
