@@ -1,0 +1,7 @@
+node_modules
+reports
+test
+docs
+examples
+.github
+*.sarif

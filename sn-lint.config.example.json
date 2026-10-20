@@ -1,0 +1,15 @@
+{
+  "failOn": "error",
+  "ignoreRecords": ["Vendor *"],
+  "rules": {
+    "SN001": "error",
+    "SN004": {
+      "severity": "warning",
+      "options": {
+        "allow": ["c0ffee000000000000000000000000bb"]
+      }
+    },
+    "leftover-debug-logging": "warning",
+    "SN014": "off"
+  }
+}

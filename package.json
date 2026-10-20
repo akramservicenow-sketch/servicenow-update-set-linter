@@ -1,0 +1,42 @@
+{
+  "name": "servicenow-update-set-linter",
+  "version": "1.0.0",
+  "description": "Static analysis CLI for exported ServiceNow update sets: flags upgrade-risk, performance and security anti-patterns and emits table, JSON or SARIF output.",
+  "main": "src/index.js",
+  "bin": {
+    "sn-lint": "bin/sn-lint.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "lint:examples": "node bin/sn-lint.js examples/ --fail-on none",
+    "sarif:examples": "node bin/sn-lint.js examples/ --format sarif --output reports/sn-lint.sarif --fail-on none",
+    "examples": "node scripts/generate-examples.js",
+    "sample-output": "node bin/sn-lint.js examples/ --no-color --fail-on none > docs/sample-output.txt"
+  },
+  "keywords": [
+    "servicenow",
+    "update-set",
+    "linter",
+    "static-analysis",
+    "sarif",
+    "code-scanning",
+    "glide",
+    "devops"
+  ],
+  "author": "Shaik Akram",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akramservicenow-sketch/servicenow-update-set-linter.git"
+  }
+}
